@@ -1,0 +1,210 @@
+<?xml version="1.0" ?>
+
+<project name="teste">
+
+
+	<property environment="env" />
+
+	<property name="java4" value="C:\docs\Java\jdk1.4.2_15_x86" />
+	<property name="java6" value="C:\docs\Java\jdk1.6.0_45" />
+	<property name="java8" value="C:\docs\Java\jdk1.8.0_201" />
+	<property name="java11" value="C:\docs\Java\jdk-11.0.2" />
+
+	<property name="serverlib" value="C:\docs\SERVERS\apache-tomcat-6.0.18\lib" />
+
+	<!--  ATENÇÃO NA VERSÃO -->
+	<property name="java" value="${java8}" />
+	<property name="javalib.dir" value="${java}\jre\lib" />
+
+	<!--property name="lib.dir" value="${web.dir}/WEB-INF/lib" /-->
+	<property name="apachelib.dir" value="C:\docs\SERVERS\Tomcat5.0.28\common\lib" />
+
+	<path id="classpath">
+		<!--fileset dir="${lib.dir}" includes="**/*.jar" /-->
+		<fileset dir="${apachelib.dir}" includes="**/*.jar" />
+		<fileset dir="${javalib.dir}" includes="**/*.jar" />
+	</path>
+
+	<property name="src" location="src" />
+	<property name="srcTemp" location="srcTemp" />
+
+	<property name="jar.dir" location="jar" />
+	<property name="build" location="dist" />
+	<property name="classes" location="WEB-INF\classes" />
+
+
+	<!-- ############################################################################################################# -->
+	<target name="fnCompileJava4" description="compile the source">
+		<propertyreset name="java" value="${java4}" />
+		<propertyreset name="javalib.dir" value="${java}\jre\lib" />
+		<antcall target="fnCompileJavaVersions" />
+	</target>
+
+	<target name="fnCompileJava6" description="compile the source">
+		<propertyreset name="java" value="${java6}" />
+		<propertyreset name="javalib.dir" value="${java}\jre\lib" />
+		<antcall target="fnCompileJavaVersions" />
+	</target>
+
+	<target name="fnCompileJava8" description="compile the source">
+		<propertyreset name="java" value="${java8}" />
+		<propertyreset name="javalib.dir" value="${java}\jre\lib" />
+		<antcall target="fnCompileJavaVersions" />
+	</target>
+
+	<target name="fnCompileJavaVersions_gerawebxml" description="compile the source">
+		<echo message="Compile the java code from ${src} into ${build}" />
+		<echo message="java: ${java}" />
+		<delete dir="${build}" />
+		<mkdir dir="${build}" />
+
+		<javac compiler="classic" executable="${java}/bin/javac" fork="yes" encoding="iso-8859-1" srcdir="${src}" destdir="${build}" classpathref="classpath" includeantruntime="false">
+			<exclude name="teste/*.**" />
+
+		</javac>
+
+
+		<delete dir="teste" />
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<tstamp>
+			<format property="timestamp" timezone="GMT-3:00" pattern="yyMMdd.HHmm" />
+		</tstamp>
+		<jar destfile="${jar.dir}/gerawebxml.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="gerawebxml" />
+				<attribute name="Implementation-Version" value="${timestamp} with ${java}" />
+			</manifest>
+		</jar>
+		<delete dir="${build}" />
+	</target>
+
+	<target name="fnCompileJavaVersions_resetSenha" description="compile the source">
+		<echo message="Compile the java code from ${src} into ${build}" />
+		<echo message="java: ${java}" />
+		<delete dir="${build}" />
+		<mkdir dir="${build}" />
+
+		<javac compiler="classic" executable="${java}/bin/javac" fork="yes" encoding="iso-8859-1" srcdir="${src}" destdir="${build}" classpathref="classpath" includeantruntime="false">
+			<exclude name="teste/*.**" />
+
+		</javac>
+
+
+		<delete dir="teste" />
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<tstamp>
+			<format property="timestamp" timezone="GMT-3:00" pattern="yyMMdd.HHmm" />
+		</tstamp>
+		<jar destfile="${jar.dir}/resetSenha.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="resetSenha" />
+				<attribute name="Implementation-Version" value="${timestamp} with ${java}" />
+			</manifest>
+		</jar>
+		<delete dir="${build}" />
+	</target>
+
+	<target name="fnCompileJavaVersions_Chronometro" description="compile the source">
+		<echo message="Compile the java code from ${src} into ${build}" />
+		<echo message="java: ${java}" />
+		<delete dir="${build}" />
+		<mkdir dir="${build}" />
+
+		<mkdir dir="${srcTemp}/AWT" />
+		<copy file="${src}/AWT/MoveMouseListener.java" overwrite="true" todir="${srcTemp}/AWT" />
+		<copy file="${src}/Chronometer.java" overwrite="true" todir="${srcTemp}" />
+
+		<javac compiler="classic" executable="${java}/bin/javac" fork="yes" encoding="iso-8859-1" srcdir="${srcTemp}" destdir="${build}" classpathref="classpath" includeantruntime="false">
+			<exclude name="teste/*.**" />
+
+		</javac>
+
+
+		<delete dir="teste" />
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<tstamp>
+			<format property="timestamp" timezone="GMT-3:00" pattern="yyMMdd.HHmm" />
+		</tstamp>
+		<jar destfile="${jar.dir}/chronometro.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="Chronometro" />
+				<attribute name="Implementation-Version" value="${timestamp} with ${java}" />
+			</manifest>
+		</jar>
+		<delete dir="${build}" />
+	</target>
+
+	<target name="fnCompileJavaVersions_OpenApp" description="compile the source">
+		<echo message="Compile the java code from ${src} into ${build}" />
+		<echo message="java: ${java}" />
+		<delete dir="${build}" />
+		<mkdir dir="${build}" />
+		<delete dir="${srcTemp}" />
+		<mkdir dir="${srcTemp}/macro/others" />
+		<copy file="${src}/macro/others/OpenApp.java" overwrite="true" todir="${srcTemp}/macro/others" />
+
+		<javac compiler="classic" executable="${java}/bin/javac" fork="yes" encoding="iso-8859-1" srcdir="${srcTemp}" destdir="${build}" classpathref="classpath" includeantruntime="false">
+			<exclude name="teste/*.**" />
+
+		</javac>
+
+
+		<delete dir="teste" />
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<tstamp>
+			<format property="timestamp" timezone="GMT-3:00" pattern="yyMMdd.HHmm" />
+		</tstamp>
+		<jar destfile="${jar.dir}/openapp.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="macro.others.OpenApp" />
+				<attribute name="Implementation-Version" value="${timestamp} with ${java}" />
+			</manifest>
+		</jar>
+		<delete dir="${build}" />
+	</target>
+
+
+	<!-- ############################################################################################################# -->
+	<target name="fnBuildServerLocal" description="copia o jar para o servidor">
+
+		<copy todir="${serverlib}">
+			<fileset dir="${jar.dir}" />
+		</copy>
+
+	</target>
+
+
+	<!-- ############################################################################################################# -->
+	<!-- ############################################################################################################# -->
+	<target name="fnPacoteClassesBuildEclise" description="criar pacote com classes geradas pelo build do eclipse">
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<tstamp>
+			<format property="timestamp" timezone="GMT-3:00" pattern="yyMMdd.HHmm" />
+		</tstamp>
+		<jar destfile="${jar.dir}/seguranca.jar" basedir="${classes}" excludes="lib/**,**/*.bak, teste/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="resetSenha" />
+				<attribute name="Implementation-Version" value="${timestamp} with ${java}" />
+			</manifest>
+		</jar>
+
+	</target>
+
+	<scriptdef name="propertyreset" language="javascript" description="Allows to assign @{property} new value">
+		<attribute name="name" />
+		<attribute name="value" />
+		project.setProperty(attributes.get("name"), attributes.get("value"));
+	</scriptdef>
+
+
+</project>
