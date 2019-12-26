@@ -25,7 +25,7 @@
 		<fileset dir="${javalib.dir}" includes="**/*.jar" />
 	</path>
 
-	<property name="src" location="src" />
+	<property name="src" location="appClientModule" />
 	<property name="srcTemp" location="srcTemp" />
 
 	<property name="jar.dir" location="jar" />
@@ -170,6 +170,38 @@
 		</jar>
 		<delete dir="${build}" />
 	</target>
+
+	<target name="fnCompileJavaVersions_RobotKey" description="compile the source">
+		<echo message="Compile the java code from ${src} into ${build}" />
+		<echo message="java: ${java}" />
+		<delete dir="${build}" />
+		<mkdir dir="${build}" />
+		<delete dir="${srcTemp}" />
+		<mkdir dir="${srcTemp}/macro/others" />
+		<copy file="${src}/macro/others/RobotKey.java" overwrite="true" todir="${srcTemp}/macro/others" />
+
+		<javac compiler="classic" executable="${java}/bin/javac" fork="yes" encoding="iso-8859-1" srcdir="${srcTemp}" destdir="${build}" classpathref="classpath" includeantruntime="false">
+			<exclude name="teste/*.**" />
+
+		</javac>
+
+
+		<delete dir="teste" />
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<tstamp>
+			<format property="timestamp" timezone="GMT-3:00" pattern="yyMMdd.HHmm" />
+		</tstamp>
+		<jar destfile="${jar.dir}/robotkey.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="macro.others.RobotKey" />
+				<attribute name="Implementation-Version" value="${timestamp} with ${java}" />
+			</manifest>
+		</jar>
+		<delete dir="${build}" />
+	</target>
+
 
 
 	<!-- ############################################################################################################# -->
